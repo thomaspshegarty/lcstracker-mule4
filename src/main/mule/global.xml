@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd 
+http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd"></mule>
+
+	<http:listener-config xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:http="http://www.mulesoft.org/schema/mule/http" name="lcsTracker-httpListenerConfig" doc:name="HTTP Listener config" doc:id="8e6e60a3-a8b3-4c6b-ab21-78d3941e5a61" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd">
+	<http:listener-config name="lcstracker-httpListenerConfig" doc:name="HTTP Listener config" doc:id="1730fc5b-1605-4967-a998-0cdf42d949dd" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<apikit:config outboundHeadersMapName="outboundHeadersMapName" httpStatusVarName="httpStatus" doc:name="Router" doc:id="affe381c-f599-4e9f-a9c0-50071fa6be2f" name="lcstracker-router" raml="api/lcsTracker.raml">
+		<apikit:flow-mappings >
+			<apikit:flow-mapping resource="/teams/{tag}/players" action="get" flow-ref="players_getPlayersByRole_flow" />
+			<apikit:flow-mapping resource="/teams/{tag}/players" action="post" flow-ref="players_postPlayers_flow" />
+			<apikit:flow-mapping resource="/teams/{tag}/players/{ign}" action="put" flow-ref="players_putPlayer_flow" />
+			<apikit:flow-mapping resource="/teams/{tag}/players/{ign}" action="get" flow-ref="players_getPlayerByIgn_flow" />
+			<apikit:flow-mapping resource="/teams/{tag}/players/{ign}" action="delete" flow-ref="players_deletePlayer_flow" />
+
+			<apikit:flow-mapping resource="/teams" action="get" flow-ref="teams_getTeamsByRegion_flow"/>
+			<apikit:flow-mapping resource="/teams" action="post" flow-ref="teams_postTeams_flow"/>
+			<apikit:flow-mapping resource="/teams/{tag}" action="get" flow-ref="teams_getTeamByTag_flow"/>
+			<apikit:flow-mapping resource="/teams/{tag}" action="put" flow-ref="teams_putTeam_flow"/>
+			<apikit:flow-mapping resource="/teams/{tag}" action="delete" flow-ref="teams_deleteTeam_flow"/>
+		</apikit:flow-mappings>
+	
+	</apikit:config>
+	</http:listener-config>

@@ -1,0 +1,121 @@
+#%RAML 1.0
+title: LCS Tracker
+baseUri: https://basicurl.com/{version}
+version: v1
+
+types:
+  typeTeam: !include types/typeTeam.raml
+  typePlayer: !include types/typePlayer.raml
+  
+traits:
+  responseMessage: !include traits/responseMessage.raml
+
+securitySchemes:
+  basic: !include security/basic.raml
+
+securedBy: [basic]
+
+/players:
+  description: "collection of all currently active professional players"
+  post:
+    description: "add new players to the database"
+    body:
+      application/json:
+        type: typePlayer[]
+        example: !include examples/playerArray.json
+    is: [ responseMessage ]
+  get:
+    description: "get a list of players on a specific team"
+    queryParameters:
+      teamTag: 
+        type: string
+        required: false
+        minLength: 2
+        maxLength: 3
+    responses:
+      200:
+        body:
+          application/json:
+            type: typePlayer[]
+            example: !include examples/playerArray.json
+        
+  /{playerId}:
+    uriParameters:
+      playerId:
+        type: integer
+    get:
+      description: "get a player by their id"
+      responses:
+        200:
+          body:
+            application/json:
+              type: typePlayer
+              example: !include examples/player.json
+        404:
+          body:
+            application/json:
+              example: |
+                {
+                  "message": "Player not found."
+                }
+    put:
+      description: "update info of a specific player"
+      body:
+        application/json:
+          type: typePlayer
+          example: !include examples/player.json
+      is: [ responseMessage ]
+    delete:
+      description: "removes the entry for given id"
+      is: [ responseMessage ]
+
+/teams:
+  description: "collection of all active professional teams"
+  post:
+    description: "adds new teams to the active database"
+    body:
+      application/json:
+        type: typeTeam[]
+        example: !include examples/teamArray.json
+    is: [ responseMessage ]
+  get:
+    description: "get list of teams from given region"
+    queryParameters:
+      region:
+        type: string
+        required: false
+        minLength: 2
+        maxLength: 3
+    responses:
+      200:
+        body:
+          application/json:
+            type: typeTeam[]
+            example: !include examples/teamArray.json
+  /{teamId}:
+    uriParameters:
+      teamId:
+        type: integer
+    get:
+      description: "get the team info for the team id"
+      responses:
+        200:
+          body:
+            application/json:
+              type: typeTeam
+              example: !include examples/team.json
+        404:
+          body:
+            application/json:
+              example: |
+                {"message": "Team not found."}
+    put:
+      description: "update team info"
+      body:
+        application/json:
+          type: typeTeam
+          example: !include examples/team.json
+      is: [ responseMessage ]
+    delete:
+      description: "remove the team from the db"
+      is: [ responseMessage ]

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	<flow name="teams_getTeamsByRegion_flow" doc:id="97e3074e-bf2d-4950-96cc-b305dcaa73b7" />
+	<flow name="teams_getTeamByTag_flow" doc:id="5b27c9ab-dfb2-4b14-91ee-b7a6d950ffc5" />
+	<flow name="teams_putTeam_flow" doc:id="7202a787-1f45-4c46-8629-3e7ffba56591" />
+	<flow name="teams_deleteTeam_flow" doc:id="48768423-421a-45ae-9fa4-d3ff4a54aeaa" />
+	<flow name="teams_postTeams_flow" doc:id="f9cc19fb-0c4f-45df-9834-e9d0b8e19c5a" />
+</mule>

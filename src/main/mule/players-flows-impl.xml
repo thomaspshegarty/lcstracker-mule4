@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	<flow name="players_getPlayersByRole_flow" doc:id="b7a8afb4-8a08-4411-8bb6-4e184a0a7ad0" />
+	<flow name="players_getPlayerByIgn_flow" doc:id="4f107802-e527-40cf-a5c4-78e8b3b8e95e" />
+	<flow name="players_deletePlayer_flow" doc:id="384c8ab2-511c-4c1f-963b-46319e56f8a8" />
+	<flow name="players_putPlayer_flow" doc:id="386a68d8-fb3e-4150-a888-8eafa8dd8019" />
+	<flow name="players_postPlayers_flow" doc:id="b5f1cc5b-b8af-4379-979b-ce22025220e8" />
+</mule>
