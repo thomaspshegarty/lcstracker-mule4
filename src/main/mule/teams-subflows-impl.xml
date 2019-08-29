@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	<sub-flow name="teams_getTeamsByRegion_subFlow" doc:id="30904662-a84a-4605-9239-aec89a3f356c" >
+		<logger level="INFO" doc:name="Logger" doc:id="7a3b374c-f376-4d0d-a7f3-371eb4582dea" />
+	</sub-flow>
+	<sub-flow name="teams_postTeams_subFlow" doc:id="d3f510a4-69cb-4966-9f7e-6ae4ed02d385" >
+		<logger level="INFO" doc:name="Logger" doc:id="9e523e42-d98b-4615-89a5-e42d1251b273" />
+	</sub-flow>
+	<sub-flow name="teams_getTeamByTag_subFlow" doc:id="21aef9bf-0f17-417f-aa83-d864e3b31971" >
+		<logger level="INFO" doc:name="Logger" doc:id="552461e6-b3d6-42cf-9497-e00f99e15759" />
+	</sub-flow>
+	<sub-flow name="teams_putTeam_subFlow" doc:id="9b1b3ecc-a87d-4708-8a62-85b872b48753" >
+		<logger level="INFO" doc:name="Logger" doc:id="b5e6d9a5-2a6d-44c5-bcf5-89e4ced524ad" />
+	</sub-flow>
+	<sub-flow name="teams_deleteTeam_subFlow" doc:id="c95b2571-8d5c-464a-b009-26d9db8f2702" >
+		<logger level="INFO" doc:name="Logger" doc:id="b8a33a02-f92c-4729-9e6c-9f87a643aa71" />
+	</sub-flow>
+</mule>

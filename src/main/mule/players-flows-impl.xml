@@ -3,9 +3,19 @@
 <mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
-	<flow name="players_getPlayersByRole_flow" doc:id="b7a8afb4-8a08-4411-8bb6-4e184a0a7ad0" />
-	<flow name="players_getPlayerByIgn_flow" doc:id="4f107802-e527-40cf-a5c4-78e8b3b8e95e" />
-	<flow name="players_deletePlayer_flow" doc:id="384c8ab2-511c-4c1f-963b-46319e56f8a8" />
-	<flow name="players_putPlayer_flow" doc:id="386a68d8-fb3e-4150-a888-8eafa8dd8019" />
-	<flow name="players_postPlayers_flow" doc:id="b5f1cc5b-b8af-4379-979b-ce22025220e8" />
+	<flow name="players_getPlayersByRole_flow" doc:id="b7a8afb4-8a08-4411-8bb6-4e184a0a7ad0" >
+		<flow-ref doc:name="players_getPlayersByRole_subFlow reference" doc:id="c055a0ab-11cb-47cb-8339-458a37b264ca" name="players_getPlayersByRole_subFlow"/>
+	</flow>
+	<flow name="players_getPlayerByIgn_flow" doc:id="4f107802-e527-40cf-a5c4-78e8b3b8e95e" >
+		<flow-ref doc:name="players_getPlayerByIgn_subFlow reference" doc:id="299ab17b-82ae-4b3b-9153-92a88272045a" name="players_getPlayerByIgn_subFlow"/>
+	</flow>
+	<flow name="players_deletePlayer_flow" doc:id="384c8ab2-511c-4c1f-963b-46319e56f8a8" >
+		<flow-ref doc:name="players_deletePlayer_subFlow reference" doc:id="8bb17246-e6d1-472e-a1c8-a1ea3e07dc8b" name="players_deletePlayer_subFlow"/>
+	</flow>
+	<flow name="players_putPlayer_flow" doc:id="386a68d8-fb3e-4150-a888-8eafa8dd8019" >
+		<flow-ref doc:name="players_putPlayer_subFlow reference" doc:id="da409658-8ddf-44b7-86cb-e6d3622ba604" name="players_putPlayer_subFlow"/>
+	</flow>
+	<flow name="players_postPlayers_flow" doc:id="b5f1cc5b-b8af-4379-979b-ce22025220e8" >
+		<flow-ref doc:name="players_postPlayers_subFlow reference" doc:id="41b15bab-68b4-4373-9682-51969fecc433" name="players_postPlayers_subFlow"/>
+	</flow>
 </mule>

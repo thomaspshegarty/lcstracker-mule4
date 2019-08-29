@@ -3,9 +3,19 @@
 <mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
-	<flow name="teams_getTeamsByRegion_flow" doc:id="97e3074e-bf2d-4950-96cc-b305dcaa73b7" />
-	<flow name="teams_getTeamByTag_flow" doc:id="5b27c9ab-dfb2-4b14-91ee-b7a6d950ffc5" />
-	<flow name="teams_putTeam_flow" doc:id="7202a787-1f45-4c46-8629-3e7ffba56591" />
-	<flow name="teams_deleteTeam_flow" doc:id="48768423-421a-45ae-9fa4-d3ff4a54aeaa" />
-	<flow name="teams_postTeams_flow" doc:id="f9cc19fb-0c4f-45df-9834-e9d0b8e19c5a" />
+	<flow name="teams_getTeamsByRegion_flow" doc:id="97e3074e-bf2d-4950-96cc-b305dcaa73b7" >
+		<flow-ref doc:name="teams_getTeamsByRegion_subFlow reference" doc:id="c28b78cf-89bd-4fe7-a760-387e9720e97d" name="teams_getTeamsByRegion_subFlow"/>
+	</flow>
+	<flow name="teams_getTeamByTag_flow" doc:id="5b27c9ab-dfb2-4b14-91ee-b7a6d950ffc5" >
+		<flow-ref doc:name="teams_getTeamByTag_subFlow reference" doc:id="ab1fae34-863b-4824-80df-87fa5278fffd" name="teams_getTeamByTag_subFlow"/>
+	</flow>
+	<flow name="teams_putTeam_flow" doc:id="7202a787-1f45-4c46-8629-3e7ffba56591" >
+		<flow-ref doc:name="teams_putTeam_subFlow reference" doc:id="4e4419fb-4f5c-491b-b57b-a8989ca71833" name="teams_putTeam_subFlow"/>
+	</flow>
+	<flow name="teams_deleteTeam_flow" doc:id="48768423-421a-45ae-9fa4-d3ff4a54aeaa" >
+		<flow-ref doc:name="teams_deleteTeam_subFlow reference" doc:id="77935edf-c5a9-4844-834f-15648fe53e65" name="teams_deleteTeam_subFlow"/>
+	</flow>
+	<flow name="teams_postTeams_flow" doc:id="f9cc19fb-0c4f-45df-9834-e9d0b8e19c5a" >
+		<flow-ref doc:name="teams_postTeams_subFlow reference" doc:id="3faebeb8-bd73-401f-8e28-a663a05a21d6" name="teams_postTeams_subFlow"/>
+	</flow>
 </mule>

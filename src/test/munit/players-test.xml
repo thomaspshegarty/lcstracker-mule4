@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:munit="http://www.mulesoft.org/schema/mule/munit"
+	xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<munit:config name="players-test.xml" />
+	
+	<munit:test name="players_getPlayersByRole_test" description="Test" doc:id="ef66b6c1-5d33-424f-9167-6dc21e3da5f8" >
+		<munit:execution >
+			<munit:attributes doc:name="Setting attributes" value ="#&nbsp;[{queryParams:{'role':'top'}},{uriParams:{'tag':'tsm'}}]"/>
+			<flow-ref doc:name="Flow-ref to players_getPlayersByRole_flow" doc:id="14d9c9db-5155-43b3-8dba-a495ce5c5d9c" name="players_getPlayersByRole_flow"/>
+		</munit:execution>
+	</munit:test>
+	<munit:test name="players-test-players_getPlayerByIgn_flowTest" description="Test" doc:id="1658f071-8f6d-4935-81e3-e6fbb49227dc" >
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to players_getPlayerByIgn_flow" doc:id="ed165c43-8c3e-4ec1-9cef-889fc288c24f" name="players_getPlayerByIgn_flow"/>
+		</munit:execution>
+	</munit:test>
+	<munit:test name="players-test-players_deletePlayer_flowTest" description="Test" doc:id="b65a148d-94da-483c-8ca4-93947ab5b13a" >
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to players_deletePlayer_flow" doc:id="fc79d538-7abd-464b-9d84-3f77b8107319" name="players_deletePlayer_flow"/>
+		</munit:execution>
+	</munit:test>
+	<munit:test name="players-test-players_putPlayer_flowTest" description="Test" doc:id="55f0d20a-5242-41ba-89ff-b74afbb8fdf3" >
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to players_putPlayer_flow" doc:id="0ba2f73e-935f-41cd-8a72-fb2bbbea56ef" name="players_putPlayer_flow"/>
+		</munit:execution>
+	</munit:test>
+	<munit:test name="players-test-players_postPlayers_flowTest" description="Test" doc:id="36e967bf-393a-4179-92c6-f99afbc40984" >
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to players_postPlayers_flow" doc:id="d4fff6b1-cedf-4bbc-b1f4-657aa839c975" name="players_postPlayers_flow"/>
+		</munit:execution>
+	</munit:test>
+
+
+</mule>

@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
+  <types:catalog>
+    <types:type name="String" format="java">
+      <types:shape format="raml"><![CDATA[#%RAML 1.0 DataType
+type: string]]></types:shape>
+    </types:type>
+    <types:type name="stringvar" format="java">
+      <types:shape format="raml"><![CDATA[#%RAML 1.0 DataType
+type: string]]></types:shape>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#3bc0642a-124d-42f4-9076-3f3a7bb23cf1">
+    <types:processor-declaration>
+      <types:output-event>
+        <types:variables>
+          <types:variable name="role" type="String"/>
+          <types:variable name="tag" type="String"/>
+        </types:variables>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#1994d7e1-f8fe-4db1-8d4b-6797447182ad"/>
+  <types:enrichment select="#dd35f1fc-9fd3-42d8-a65e-5e8c49d1130d">
+    <types:processor-declaration>
+      <types:output-event>
+        <types:variables>
+          <types:variable name="ign" type="stringvar"/>
+        </types:variables>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+</types:mule>

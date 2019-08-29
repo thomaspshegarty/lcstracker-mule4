@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<sub-flow name="players_getPlayersByRole_subFlow" doc:id="ad06ac69-14af-4fba-89b7-f81d67198d4b" >
+		<ee:transform doc:name="Retrieve role and team tag from inbound properties" doc:id="3bc0642a-124d-42f4-9076-3f3a7bb23cf1" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="role" ><![CDATA[%dw 2.0
+output application/java
+---
+message.attributes.queryParams.'role']]></ee:set-variable>
+				<ee:set-variable variableName="tag" ><![CDATA[%dw 2.0
+output application/java
+---
+message.attributes.uriParams.'tag']]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<logger level="TRACE" doc:name="Logger" doc:id="46406831-9d18-47c0-89f6-2844122af371" message="Retrieving players with team [#[vars.tag]] and [#[vars.role]]." category="com.ms3.lcstracker-mule4.players"/>
+	</sub-flow>
+	<sub-flow name="players_postPlayers_subFlow" doc:id="f0c43f46-c91a-4c0d-ad5e-22ad3620740f" >
+		<logger level="INFO" doc:name="Logger" doc:id="f43a5af9-ef90-4e72-8799-6300f19d6b68" />
+	</sub-flow>
+	<sub-flow name="players_getPlayerByIgn_subFlow" doc:id="464d7a47-a513-4523-88ba-628af576e796" >
+		<ee:transform doc:name="Transform Message" doc:id="dd35f1fc-9fd3-42d8-a65e-5e8c49d1130d" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="ign" ><![CDATA[%dw 2.0
+output application/java
+---
+message.attributes.uriParams.'ign']]></ee:set-variable>
+				<ee:set-variable variableName="tag" ><![CDATA[%dw 2.0
+output application/java
+---
+message.attributes.uriParams.'tag']]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<logger level="TRACE" doc:name="Logger" doc:id="b2d86043-d539-433a-9e37-5420c4bd0abe" message="[#[vars.callTrace]] Retrieving player [#[vars.ign]] from team [#[vars.tag]]" category="com.ms3.lcstracker-mule4.players"/>
+	</sub-flow>
+	<sub-flow name="players_putPlayer_subFlow" doc:id="1be26445-5c88-4c96-9eda-b5a04bc7a07c" >
+		<logger level="INFO" doc:name="Logger" doc:id="7cb03a16-3bd3-4a78-a51d-bae0ab8e1270" />
+	</sub-flow>
+	<sub-flow name="players_deletePlayer_subFlow" doc:id="af9bbaae-0dd2-44dc-aefa-4ae76c53c0d3" >
+		<logger level="INFO" doc:name="Logger" doc:id="7781e8af-8272-4f17-82d9-cd55693c93ce" />
+	</sub-flow>
+</mule>
