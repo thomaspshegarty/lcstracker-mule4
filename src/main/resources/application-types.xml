@@ -30,4 +30,9 @@ type: string]]></types:shape>
       </types:output-event>
     </types:processor-declaration>
   </types:enrichment>
+  <types:enrichment select="#fc95aa71-c985-46d6-a573-0a7e2f173aae"/>
+  <types:enrichment select="#8db78bfe-6d94-41e2-97ae-025f28f8e52b"/>
+  <types:enrichment select="#42db4719-3f80-4cda-be02-6ead6fce623a"/>
+  <types:enrichment select="#8902e731-48f1-45b6-88c1-ba58a8c137d9"/>
+  <types:enrichment select="#24ca2127-52dc-4620-aad3-a4adaf6d6869"/>
 </types:mule>

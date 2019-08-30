@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
-	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+<mule xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
 	<sub-flow name="players_getPlayersByRole_subFlow" doc:id="ad06ac69-14af-4fba-89b7-f81d67198d4b" >
 		<ee:transform doc:name="Retrieve role and team tag from inbound properties" doc:id="3bc0642a-124d-42f4-9076-3f3a7bb23cf1" >
 			<ee:message >
@@ -19,13 +20,55 @@ output application/java
 message.attributes.uriParams.'tag']]></ee:set-variable>
 			</ee:variables>
 		</ee:transform>
-		<logger level="TRACE" doc:name="Logger" doc:id="46406831-9d18-47c0-89f6-2844122af371" message="Retrieving players with team [#[vars.tag]] and [#[vars.role]]." category="com.ms3.lcstracker-mule4.players"/>
+		<logger level="INFO" doc:name="Log the tag and role" doc:id="46406831-9d18-47c0-89f6-2844122af371" message="[#[vars.callTrace]] Retrieving players with team [#[vars.tag]] and [#[vars.role]]." category="com.ms3.lcstracker-mule4.players" />
+		<choice doc:name="Determine if role is null" doc:id="c510b1d8-caf2-4dcc-a7ad-587c58f1f694" >
+			<when expression="#[vars.role == '']">
+				<db:select doc:name="Select all players of team" doc:id="0eecfed0-e357-4ceb-93e5-a42458e2dbc7" config-ref="dbConfig">
+					<db:sql >SELECT * FROM players WHERE team=:tag</db:sql>
+					<db:input-parameters><![CDATA[#['tag' : vars.tag]]]></db:input-parameters>
+				</db:select>
+			</when>
+			<otherwise >
+				<db:select doc:name="Select players by role db call" doc:id="8b447ddc-bdcd-4b24-874c-440615628bb4" config-ref="dbConfig">
+			<db:sql>SELECT * FROM players WHERE team=[#[vars.tag]] AND igrole=[#[vars.role]];</db:sql>
+		</db:select>
+			</otherwise>
+		</choice>
+		<ee:transform doc:name="Transform payload to JSON readable format" doc:id="8c9c106d-149c-437a-8b19-95c47dd017a6" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
 	</sub-flow>
 	<sub-flow name="players_postPlayers_subFlow" doc:id="f0c43f46-c91a-4c0d-ad5e-22ad3620740f" >
-		<logger level="INFO" doc:name="Logger" doc:id="f43a5af9-ef90-4e72-8799-6300f19d6b68" />
+		<ee:transform doc:name="Save payload" doc:id="4fa040d6-2fda-4069-a75d-ea46ab269390" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="to_return" ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<db:bulk-insert doc:name="Insert players into db" doc:id="c6b3d0a3-dea7-4b5c-94ae-ed14e7bc5665" config-ref="dbConfig">
+			<db:sql >INSERT INTO players(team, igrole, ign) VALUES (:team, :role, :ign);</db:sql>
+		</db:bulk-insert>
+		<logger level="INFO" doc:name="Log that we've posted the players" doc:id="f43a5af9-ef90-4e72-8799-6300f19d6b68" message="[#[vars.callTrace]] Posted the inserted JSON"/>
+		<ee:transform doc:name="Transform payload to JSON readable format" doc:id="46a9b6ec-42a6-4b89-a2e5-604bc5e67970" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+vars.to_return]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
 	</sub-flow>
 	<sub-flow name="players_getPlayerByIgn_subFlow" doc:id="464d7a47-a513-4523-88ba-628af576e796" >
-		<ee:transform doc:name="Transform Message" doc:id="dd35f1fc-9fd3-42d8-a65e-5e8c49d1130d" >
+		<ee:transform doc:name="Set tag and ign variables" doc:id="dd35f1fc-9fd3-42d8-a65e-5e8c49d1130d" >
 			<ee:message >
 			</ee:message>
 			<ee:variables >
@@ -39,12 +82,59 @@ output application/java
 message.attributes.uriParams.'tag']]></ee:set-variable>
 			</ee:variables>
 		</ee:transform>
-		<logger level="TRACE" doc:name="Logger" doc:id="b2d86043-d539-433a-9e37-5420c4bd0abe" message="[#[vars.callTrace]] Retrieving player [#[vars.ign]] from team [#[vars.tag]]" category="com.ms3.lcstracker-mule4.players"/>
+		<logger level="TRACE" doc:name="Log the ign and tag of player we're retrieving" doc:id="b2d86043-d539-433a-9e37-5420c4bd0abe" message="[#[vars.callTrace]] Retrieving player [#[vars.ign]] from team [#[vars.tag]]" category="com.ms3.lcstracker-mule4.players" />
+		<db:select doc:name="Select player with given team and ign" doc:id="afd5b2d8-98b3-40d0-8a78-27624ad0cc7f" config-ref="dbConfig">
+			<db:sql >SELECT * FROM players WHERE team=:tag AND ign=:ign</db:sql>
+			<db:input-parameters ><![CDATA[#[{
+'tag':vars.tag,
+'ign':vars.ign
+}]]]></db:input-parameters>
+		</db:select>
 	</sub-flow>
 	<sub-flow name="players_putPlayer_subFlow" doc:id="1be26445-5c88-4c96-9eda-b5a04bc7a07c" >
-		<logger level="INFO" doc:name="Logger" doc:id="7cb03a16-3bd3-4a78-a51d-bae0ab8e1270" />
+		<ee:transform doc:name="Make sure input is a json" doc:id="93c4a5f7-c0e1-42b0-870a-8ef067c3b2db" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="to_return" ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<logger level="INFO" doc:name="Log the ign of player to update" doc:id="7cb03a16-3bd3-4a78-a51d-bae0ab8e1270" message="[#[vars.callTrace]] Updating player of ign [#[payload.ign]]"/>
+		<db:update doc:name="Update the player with given info" doc:id="e2bee0dd-d364-44e0-b97b-6c6380bf72f3" config-ref="dbConfig">
+			<db:sql >UPDATE players SET team=:team,igrole=:role,ign=:ign WHERE ign=:ign</db:sql>
+			<db:input-parameters ><![CDATA[#[{
+	'team':payload.team,
+	'ign':payload.ign,
+	'role':payload.role
+}]]]></db:input-parameters>
+		</db:update>
+		<ee:transform doc:name="Set payload of updated info" doc:id="c311416a-ebda-4298-8fab-0372923f6930" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+vars.to_return]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
 	</sub-flow>
 	<sub-flow name="players_deletePlayer_subFlow" doc:id="af9bbaae-0dd2-44dc-aefa-4ae76c53c0d3" >
-		<logger level="INFO" doc:name="Logger" doc:id="7781e8af-8272-4f17-82d9-cd55693c93ce" />
+		<ee:transform doc:name="Set ign variable" doc:id="fc95aa71-c985-46d6-a573-0a7e2f173aae" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="ign" ><![CDATA[%dw 2.0
+output application/java
+---
+message.attributes.queryParams.'ign']]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<logger level="INFO" doc:name="Log the ign of the player to delete" doc:id="7781e8af-8272-4f17-82d9-cd55693c93ce" message="[#[vars.callTrace]] Deleting player [#[vars.ign]]"/>
+		<db:delete doc:name="Delete player with given ign" doc:id="4ecef760-d329-4b20-b198-d4d9ba088735" config-ref="dbConfig">
+			<db:sql >DELETE FROM players WHERE ign=:ign</db:sql>
+			<db:input-parameters ><![CDATA[#['ign':vars.ign]]]></db:input-parameters>
+		</db:delete>
 	</sub-flow>
 </mule>

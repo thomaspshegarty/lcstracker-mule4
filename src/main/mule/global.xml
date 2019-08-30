@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
+<mule xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
 	xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit"
 	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd 
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd 
 http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
 	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="2237ee1a-950c-4a39-b5d6-cfaf99a30da9" >
@@ -26,6 +28,19 @@ http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/m
 		</apikit:flow-mappings>
 	</apikit:config>
 	<configuration-properties doc:name="Configuration properties" doc:id="f6018762-269c-4328-9b78-18123a14ff49" file="${mule.env}.properties" />
+	
+	
+
+	<db:config name="dbConfig">
+	  <db:my-sql-connection
+	  host="${db.hostname}"
+	  port="${db.port}"
+	  user="${db.user}"
+	  password="${db.password}"
+	  database="lcstracker"/>
+	</db:config>
+
+	
 	
 </mule>
 

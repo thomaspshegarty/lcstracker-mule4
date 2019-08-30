@@ -1,21 +1,125 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+<mule xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
 	<sub-flow name="teams_getTeamsByRegion_subFlow" doc:id="30904662-a84a-4605-9239-aec89a3f356c" >
-		<logger level="INFO" doc:name="Logger" doc:id="7a3b374c-f376-4d0d-a7f3-371eb4582dea" />
+		<ee:transform doc:name="Retrieve region and tag variables" doc:id="8db78bfe-6d94-41e2-97ae-025f28f8e52b" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="region" ><![CDATA[%dw 2.0
+output application/java
+---
+message.attributes.queryParams.'region']]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<logger level="INFO" doc:name="Log the region" doc:id="7a3b374c-f376-4d0d-a7f3-371eb4582dea" message="[#[vars.callTrace]] Retrieiving all teams from region [#[vars.region]]"/>
+		<choice doc:name="Detect if region is empty" doc:id="68b3d0e0-3356-43cc-be69-b9ffea1d400f" >
+			<when expression="#[vars.region=='']">
+				<db:select doc:name="Select all teams" doc:id="d047b58f-928e-4745-afbe-cdf405a0032c" config-ref="dbConfig">
+					<db:sql>SELECT * FROM teams</db:sql>
+				</db:select>
+			</when>
+			<otherwise>
+				<db:select doc:name="Select all teams from region" doc:id="c0b9a10c-5ede-46de-933b-25f113fc5b62" config-ref="dbConfig">
+					<db:sql>SELECT * FROM teams WHERE region=:region</db:sql>
+					<db:input-parameters><![CDATA[#['region':vars.region]]]></db:input-parameters>
+				</db:select>
+			</otherwise>
+		</choice>
+		<ee:transform doc:name="Transform to readable json" doc:id="7e86efd0-edd5-4669-ba01-2be39f49feaa">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
 	</sub-flow>
 	<sub-flow name="teams_postTeams_subFlow" doc:id="d3f510a4-69cb-4966-9f7e-6ae4ed02d385" >
-		<logger level="INFO" doc:name="Logger" doc:id="9e523e42-d98b-4615-89a5-e42d1251b273" />
+		<ee:transform doc:name="Save payload" doc:id="24ca2127-52dc-4620-aad3-a4adaf6d6869" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="to_return" ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<db:bulk-insert doc:name="Insert players into db" doc:id="ac1889bd-b80e-4b3c-9004-b697e4bb08d8" config-ref="dbConfig">
+			<db:sql >INSERT INTO teams(team, tag, region, wins, losses) VALUES(:team,:tag,:region,:wins,:losses);</db:sql>
+		</db:bulk-insert>
+		<logger level="INFO" doc:name="Log that we've posted the teams" doc:id="9e523e42-d98b-4615-89a5-e42d1251b273" message="[#[vars.callTrace]] Payload has been posted."/>
+		<ee:transform doc:name="Convert payload to readable JSON" doc:id="3187dfb1-63d7-48ca-98eb-2e554caa67f1" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+vars.to_return]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
 	</sub-flow>
 	<sub-flow name="teams_getTeamByTag_subFlow" doc:id="21aef9bf-0f17-417f-aa83-d864e3b31971" >
-		<logger level="INFO" doc:name="Logger" doc:id="552461e6-b3d6-42cf-9497-e00f99e15759" />
+		<ee:transform doc:name="Get the tag variable" doc:id="42db4719-3f80-4cda-be02-6ead6fce623a" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="tag" ><![CDATA[%dw 2.0
+output application/java
+---
+message.attributes.uriParams.'tag']]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<logger level="INFO" doc:name="Log the tag" doc:id="552461e6-b3d6-42cf-9497-e00f99e15759" message="[#[vars.callTrace]] Getting team of following tag [#[vars.tag]]"/>
+		<db:select doc:name="Select team by tag" doc:id="879a13c1-8c56-4f58-83c5-755c1f26788a" config-ref="dbConfig">
+			<db:sql >SELECT * FROM teams WHERE tag=:tag</db:sql>
+			<db:input-parameters ><![CDATA[#['tag':vars.tag]]]></db:input-parameters>
+		</db:select>
 	</sub-flow>
 	<sub-flow name="teams_putTeam_subFlow" doc:id="9b1b3ecc-a87d-4708-8a62-85b872b48753" >
-		<logger level="INFO" doc:name="Logger" doc:id="b5e6d9a5-2a6d-44c5-bcf5-89e4ced524ad" />
+		<ee:transform doc:name="Convert payload to JSON" doc:id="b3677ba7-56c8-4e48-ab5b-72f1fc05bf56" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="to_return" ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<logger level="INFO" doc:name="Log the tag of team to update" doc:id="b5e6d9a5-2a6d-44c5-bcf5-89e4ced524ad" message="[#[vars.callTrace]] Updating team with tag [#[payload.tag]]"/>
+		<db:update doc:name="Update the team of given tag" doc:id="d47c46bc-ef6d-4c86-aad2-25e0d3df8a30" config-ref="dbConfig">
+			<db:sql >UPDATE teams SET team=:team, tag=:tag, region=:region, wins=:wins, losses=:losses WHERE tag=:tag</db:sql>
+			<db:input-parameters ><![CDATA[#[payload]]]></db:input-parameters>
+		</db:update>
+		<ee:transform doc:name="Set payload from return variable" doc:id="c7ad5ae1-4494-4ce4-9e6a-109f035e626c" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+vars.to_return]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
 	</sub-flow>
 	<sub-flow name="teams_deleteTeam_subFlow" doc:id="c95b2571-8d5c-464a-b009-26d9db8f2702" >
-		<logger level="INFO" doc:name="Logger" doc:id="b8a33a02-f92c-4729-9e6c-9f87a643aa71" />
+		<ee:transform doc:name="Extract the team tag variable" doc:id="8902e731-48f1-45b6-88c1-ba58a8c137d9" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="tag" ><![CDATA[%dw 2.0
+output application/java
+---
+message.attributes.uriParams.'tag']]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<logger level="INFO" doc:name="Log the tag of the team to update" doc:id="b8a33a02-f92c-4729-9e6c-9f87a643aa71" message="[#[vars.callTrace]] Deleting team of tag [#[vars.tag]]"/>
+		<db:delete doc:name="Delete the team of given tag" doc:id="be6fa2ba-85ee-4c94-9001-653134fef691" config-ref="dbConfig">
+			<db:sql >DELETE FROM teams WHERE tag=:tag</db:sql>
+			<db:input-parameters ><![CDATA[#['tag':vars.tag]]]></db:input-parameters>
+		</db:delete>
 	</sub-flow>
 </mule>
