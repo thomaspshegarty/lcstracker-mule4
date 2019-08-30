@@ -12,7 +12,6 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 	
 	<munit:test name="players_getPlayersByRole_test" description="Test" doc:id="ef66b6c1-5d33-424f-9167-6dc21e3da5f8" >
 		<munit:execution >
-			<munit:attributes doc:name="Setting attributes" value ="#&nbsp;[{queryParams:{'role':'top'}},{uriParams:{'tag':'tsm'}}]"/>
 			<flow-ref doc:name="Flow-ref to players_getPlayersByRole_flow" doc:id="14d9c9db-5155-43b3-8dba-a495ce5c5d9c" name="players_getPlayersByRole_flow"/>
 		</munit:execution>
 	</munit:test>

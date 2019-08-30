@@ -8,6 +8,13 @@
         Garbage Collector (-XX:+PrintGC). These will be append to the console, so you will 
         see them in the mule_ee.log file. -->
 
+	<Sockets>
+		<Socket name="socket" host="localhost" port="5601" protocol="TCP">
+			<PatternLayout pattern="{&quot;log_timestamp&quot;:&quot;%d&quot; ,&quot;log_thread&quot;:&quot;[%t]&quot; , &quot;log_level&quot;:&quot;%-5p&quot; , %m}%n" /> 
+		</Socket>
+	</Sockets>
+
+
     <Appenders>
         <RollingFile name="file" fileName="${sys:mule.home}${sys:file.separator}logs${sys:file.separator}lcstracker-mule4.log" 
                  filePattern="${sys:mule.home}${sys:file.separator}logs${sys:file.separator}lcstracker-mule4-%i.log">
