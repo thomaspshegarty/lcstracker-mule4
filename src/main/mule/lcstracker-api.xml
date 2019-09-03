@@ -12,12 +12,6 @@ http://www.mulesoft.org/schema/mule/mule-apikit
 http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd 
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
 
-
-
-	<AsyncRoot level="INFO">
-  		<AppenderRef ref="FILE" />
-  		<AppenderRef ref="socket" />
-	</AsyncRoot>
     <flow name="lcsTracker-main">
         <http:listener config-ref="HTTP_Listener_config" path="/api/*">
             <http:response statusCode="#[vars.httpStatus default 200]">
