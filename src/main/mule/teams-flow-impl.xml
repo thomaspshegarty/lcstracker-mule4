@@ -5,7 +5,7 @@
 	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
 http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
-	<sub-flow name="teams_getTeamsByRegion_subFlow" doc:id="30904662-a84a-4605-9239-aec89a3f356c" >
+	<flow name="teams_getTeamsByRegion_flow" doc:id="30904662-a84a-4605-9239-aec89a3f356c" >
 		<ee:transform doc:name="Retrieve region and tag variables" doc:id="8db78bfe-6d94-41e2-97ae-025f28f8e52b" >
 			<ee:message >
 			</ee:message>
@@ -38,8 +38,8 @@ output application/json
 payload]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
-	</sub-flow>
-	<sub-flow name="teams_postTeams_subFlow" doc:id="d3f510a4-69cb-4966-9f7e-6ae4ed02d385" >
+	</flow>
+	<flow name="teams_postTeams_flow" doc:id="d3f510a4-69cb-4966-9f7e-6ae4ed02d385" >
 		<ee:transform doc:name="Save payload" doc:id="24ca2127-52dc-4620-aad3-a4adaf6d6869" >
 			<ee:message >
 			</ee:message>
@@ -62,8 +62,8 @@ output application/json
 vars.to_return]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
-	</sub-flow>
-	<sub-flow name="teams_getTeamByTag_subFlow" doc:id="21aef9bf-0f17-417f-aa83-d864e3b31971" >
+	</flow>
+	<flow name="teams_getTeamByTag_flow" doc:id="21aef9bf-0f17-417f-aa83-d864e3b31971" >
 		<ee:transform doc:name="Get the tag variable" doc:id="42db4719-3f80-4cda-be02-6ead6fce623a" >
 			<ee:message >
 			</ee:message>
@@ -79,8 +79,8 @@ message.attributes.uriParams.'tag']]></ee:set-variable>
 			<db:sql >SELECT * FROM teams WHERE tag=:tag</db:sql>
 			<db:input-parameters ><![CDATA[#['tag':vars.tag]]]></db:input-parameters>
 		</db:select>
-	</sub-flow>
-	<sub-flow name="teams_putTeam_subFlow" doc:id="9b1b3ecc-a87d-4708-8a62-85b872b48753" >
+	</flow>
+	<flow name="teams_putTeam_flow" doc:id="9b1b3ecc-a87d-4708-8a62-85b872b48753" >
 		<ee:transform doc:name="Convert payload to JSON" doc:id="b3677ba7-56c8-4e48-ab5b-72f1fc05bf56" >
 			<ee:message >
 			</ee:message>
@@ -104,8 +104,8 @@ output application/json
 vars.to_return]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
-	</sub-flow>
-	<sub-flow name="teams_deleteTeam_subFlow" doc:id="c95b2571-8d5c-464a-b009-26d9db8f2702" >
+	</flow>
+	<flow name="teams_deleteTeam_flow" doc:id="c95b2571-8d5c-464a-b009-26d9db8f2702" >
 		<ee:transform doc:name="Extract the team tag variable" doc:id="8902e731-48f1-45b6-88c1-ba58a8c137d9" >
 			<ee:message >
 			</ee:message>
@@ -121,5 +121,5 @@ message.attributes.uriParams.'tag']]></ee:set-variable>
 			<db:sql >DELETE FROM teams WHERE tag=:tag</db:sql>
 			<db:input-parameters ><![CDATA[#['tag':vars.tag]]]></db:input-parameters>
 		</db:delete>
-	</sub-flow>
+	</flow>
 </mule>

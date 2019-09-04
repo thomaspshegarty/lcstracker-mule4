@@ -9,6 +9,10 @@ type: string]]></types:shape>
       <types:shape format="raml"><![CDATA[#%RAML 1.0 DataType
 type: string]]></types:shape>
     </types:type>
+    <types:type name="uriParams" format="java">
+      <types:shape format="raml"><![CDATA[#%RAML 1.0 DataType
+type: string]]></types:shape>
+    </types:type>
   </types:catalog>
   <types:enrichment select="#3bc0642a-124d-42f4-9076-3f3a7bb23cf1">
     <types:processor-declaration>

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:munit="http://www.mulesoft.org/schema/mule/munit"
+	xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<munit:config name="teams-test.xml" />
+	<munit:test name="teams-test-teams_getTeamsByRegion_subFlowTest" description="Test" doc:id="235a31b4-32b7-4cbe-8a1e-f7ce2e9464a4" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="1bce02ef-36aa-448e-8da4-d08585fccf89" processor="db:select">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute attributeName="doc:name" whereValue="#['Select all teams from region']" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[[{'team':'cosmonauts','tag':'csm','region':'na','wins':10,'losses':0}]]" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to teams_getTeamsByRegion_subFlow" doc:id="976d8e2f-673b-4319-b0f3-8e66dbdfe3e4" name="teams_getTeamsByRegion_flow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="f2b2ad1f-5152-48ac-9c3d-c521ccc087bb" expression="#[payload]" is="#[MunitTools::notNullValue()]"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="teams-test-teams_postTeams_subFlowTest" description="Test" doc:id="5b2a9855-5fba-47de-9290-e96388f1a68b" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="cf8eee3b-903f-4b47-b9e2-917f263e593c" processor="db:bulk-insert">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute attributeName="doc:name" whereValue="#['Insert players into db']" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[[{'team':'cosmonauts','tag':'csm','region':'na','wins':10,'losses':0}]]" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to teams_postTeams_subFlow" doc:id="5cc03ef7-40db-4c3d-9db7-1ed056aae894" name="teams_postTeams_flow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="31125080-0197-438d-8065-942e714793cd" expression="#[payload]" is="#[MunitTools::notNullValue()]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="teams-test-teams_getTeamByTag_subFlowTest" description="Test" doc:id="fb16452f-1ea6-4637-a7fc-98960917d02e" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="e3780ef5-b22d-4100-a179-435256f0454e" processor="db:select">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute attributeName="doc:name" whereValue="#['Select team by tag']" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[[{'team':'cosmonauts','tag':'csm','region':'na','wins':10,'losses':0}]]" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to teams_getTeamByTag_subFlow" doc:id="6d71b55e-6919-41e3-8289-06e43ca99a73" name="teams_getTeamByTag_flow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="199b5144-d551-48eb-a58b-6912b7bfd48d" expression="#[payload]" is="#[MunitTools::notNullValue()]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="teams-test-teams_putTeam_subFlowTest" description="Test" doc:id="e3965dbb-55c8-459f-9079-3733fc485dd9" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="ce7e8b66-6083-4638-9769-95ad5e867e01" processor="db:update">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute attributeName="doc:name" whereValue="#['Update the team of given tag']" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[[{'team':'cosmonauts','tag':'csm','region':'na','wins':10,'losses':0}]]" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<ee:transform doc:name="Transform Message" doc:id="b88e23ee-f4d0-43a5-88c7-ebd2a67b5108" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	'tag':'csm'
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<flow-ref doc:name="Flow-ref to teams_putTeam_subFlow" doc:id="7372f269-3363-4502-b6bc-0776d5671a5b" name="teams_putTeam_flow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="15aa8b1b-5983-4bb3-928d-daa7cf8de9cd" expression="#[payload]" is="#[MunitTools::notNullValue()]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="teams-test-teams_deleteTeam_subFlowTest" description="Test" doc:id="9cb7eb72-aa3a-48e6-9229-2dc911c0d78f" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="236816df-084e-4388-b3f5-dc8e52e48579" processor="db:delete">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute attributeName="doc:name" whereValue="#['Delete the team of given tag']" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to teams_deleteTeam_subFlow" doc:id="03b4d15d-9aa5-4b9d-84cb-2ae5b9fcd50d" name="teams_deleteTeam_flow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="9e65a76b-55db-4fa1-b870-27cbea66b1e4" expression="#[payload]" is="#[MunitTools::notNullValue()]" />
+		</munit:validation>
+	</munit:test>
+
+
+</mule>

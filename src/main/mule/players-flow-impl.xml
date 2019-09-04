@@ -5,7 +5,7 @@
 	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
 http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
-	<sub-flow name="players_getPlayersByRole_subFlow" doc:id="ad06ac69-14af-4fba-89b7-f81d67198d4b" >
+	<flow name="players_getPlayersByRole_flow" doc:id="ad06ac69-14af-4fba-89b7-f81d67198d4b" >
 		<ee:transform doc:name="Retrieve role and team tag from inbound properties" doc:id="3bc0642a-124d-42f4-9076-3f3a7bb23cf1" >
 			<ee:message >
 			</ee:message>
@@ -42,8 +42,8 @@ output application/json
 payload]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
-	</sub-flow>
-	<sub-flow name="players_postPlayers_subFlow" doc:id="f0c43f46-c91a-4c0d-ad5e-22ad3620740f" >
+	</flow>
+	<flow name="players_postPlayers_flow" doc:id="f0c43f46-c91a-4c0d-ad5e-22ad3620740f" >
 		<ee:transform doc:name="Save payload" doc:id="4fa040d6-2fda-4069-a75d-ea46ab269390" >
 			<ee:message >
 			</ee:message>
@@ -66,8 +66,8 @@ output application/json
 vars.to_return]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
-	</sub-flow>
-	<sub-flow name="players_getPlayerByIgn_subFlow" doc:id="464d7a47-a513-4523-88ba-628af576e796" >
+	</flow>
+	<flow name="players_getPlayerByIgn_flow" doc:id="464d7a47-a513-4523-88ba-628af576e796" >
 		<ee:transform doc:name="Set tag and ign variables" doc:id="dd35f1fc-9fd3-42d8-a65e-5e8c49d1130d" >
 			<ee:message >
 			</ee:message>
@@ -90,8 +90,8 @@ message.attributes.uriParams.'tag']]></ee:set-variable>
 'ign':vars.ign
 }]]]></db:input-parameters>
 		</db:select>
-	</sub-flow>
-	<sub-flow name="players_putPlayer_subFlow" doc:id="1be26445-5c88-4c96-9eda-b5a04bc7a07c" >
+	</flow>
+	<flow name="players_putPlayer_flow" doc:id="1be26445-5c88-4c96-9eda-b5a04bc7a07c" >
 		<ee:transform doc:name="Make sure input is a json" doc:id="93c4a5f7-c0e1-42b0-870a-8ef067c3b2db" >
 			<ee:message >
 			</ee:message>
@@ -119,8 +119,8 @@ output application/json
 vars.to_return]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
-	</sub-flow>
-	<sub-flow name="players_deletePlayer_subFlow" doc:id="af9bbaae-0dd2-44dc-aefa-4ae76c53c0d3" >
+	</flow>
+	<flow name="players_deletePlayer_flow" doc:id="af9bbaae-0dd2-44dc-aefa-4ae76c53c0d3" >
 		<ee:transform doc:name="Set ign variable" doc:id="fc95aa71-c985-46d6-a573-0a7e2f173aae" >
 			<ee:message >
 			</ee:message>
@@ -136,5 +136,5 @@ message.attributes.queryParams.'ign']]></ee:set-variable>
 			<db:sql >DELETE FROM players WHERE ign=:ign</db:sql>
 			<db:input-parameters ><![CDATA[#['ign':vars.ign]]]></db:input-parameters>
 		</db:delete>
-	</sub-flow>
+	</flow>
 </mule>

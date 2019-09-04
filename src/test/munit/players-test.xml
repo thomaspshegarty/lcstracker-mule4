@@ -11,29 +11,104 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 	<munit:config name="players-test.xml" />
 	
 	<munit:test name="players_getPlayersByRole_test" description="Test" doc:id="ef66b6c1-5d33-424f-9167-6dc21e3da5f8" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="79ecf675-5b47-4c7d-8f4d-9044d8f15f18" processor="db:select">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute attributeName="doc:name" whereValue="#['Select players by role db call']" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[[{'ign':'warpy','igrole':'jg','team':'tsm'}]]"/>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
 		<munit:execution >
 			<flow-ref doc:name="Flow-ref to players_getPlayersByRole_flow" doc:id="14d9c9db-5155-43b3-8dba-a495ce5c5d9c" name="players_getPlayersByRole_flow"/>
 		</munit:execution>
+		<munit:validation >
+			<logger level="INFO" doc:name="Logger" doc:id="670bd07a-8073-47be-8b65-ff71d44fbab5" message="#[payload]"/>
+			<munit-tools:assert-that doc:name="Assert that" doc:id="db339897-b049-41b9-a34b-7e3dd303f381" expression="#[payload]" is="#[MunitTools::notNullValue()]"/>
+		</munit:validation>
 	</munit:test>
 	<munit:test name="players-test-players_getPlayerByIgn_flowTest" description="Test" doc:id="1658f071-8f6d-4935-81e3-e6fbb49227dc" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="bcfd9af3-12ba-4aa6-b8aa-3e507a84f793" processor="db:select">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute attributeName="doc:name" whereValue="#['Select player with given team and ign']" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[[{'ign':'warpy','igrole':'jg','team':'tsm'}]]"/>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
 		<munit:execution >
 			<flow-ref doc:name="Flow-ref to players_getPlayerByIgn_flow" doc:id="ed165c43-8c3e-4ec1-9cef-889fc288c24f" name="players_getPlayerByIgn_flow"/>
 		</munit:execution>
+		<munit:validation >
+			<logger level="INFO" doc:name="Logger" doc:id="fedd56c7-f042-478a-aaef-8a23b680b261" message="#[payload]"/>
+			<munit-tools:assert-that doc:name="Assert that" doc:id="4ad89d2c-d1da-469b-93f6-0c109e7996a9" expression="#[payload]" is="#[MunitTools::notNullValue()]"/>
+		</munit:validation>
 	</munit:test>
 	<munit:test name="players-test-players_deletePlayer_flowTest" description="Test" doc:id="b65a148d-94da-483c-8ca4-93947ab5b13a" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="b187504b-f772-4851-aeea-3fa66a57856f" processor="db:delete">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute attributeName="doc:name" whereValue="#['Delete player with given ign']" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+		</munit:behavior>
 		<munit:execution >
 			<flow-ref doc:name="Flow-ref to players_deletePlayer_flow" doc:id="fc79d538-7abd-464b-9d84-3f77b8107319" name="players_deletePlayer_flow"/>
 		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="c8b1d834-d3bb-489b-8d57-10f4f185918a" expression="#[payload]" is="#[MunitTools::notNullValue()]"/>
+		</munit:validation>
 	</munit:test>
 	<munit:test name="players-test-players_putPlayer_flowTest" description="Test" doc:id="55f0d20a-5242-41ba-89ff-b74afbb8fdf3" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="769c732b-18c1-43d5-8324-ac44de353048" processor="db:update">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute attributeName="doc:name" whereValue="#['Update the player with given info']" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[[{'ign':'warpy','igrole':'adc','team':'tsm'}]]" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
 		<munit:execution >
+			<ee:transform doc:name="Transform Message" doc:id="1bd2610e-11cb-4f82-bd3e-b3011eb61bd4" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	'ign':'warpy'
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
 			<flow-ref doc:name="Flow-ref to players_putPlayer_flow" doc:id="0ba2f73e-935f-41cd-8a72-fb2bbbea56ef" name="players_putPlayer_flow"/>
 		</munit:execution>
+		<munit:validation >
+			<logger level="INFO" doc:name="Logger" doc:id="6a008251-e38f-48be-ac85-c3b4141174a5" message="#[payload]"/>
+			<munit-tools:assert-that doc:name="Assert that" doc:id="5505f138-c6e1-4198-ba95-346c7e7c7cab" expression="#[payload]" is="#[MunitTools::notNullValue()]"/>
+		</munit:validation>
 	</munit:test>
 	<munit:test name="players-test-players_postPlayers_flowTest" description="Test" doc:id="36e967bf-393a-4179-92c6-f99afbc40984" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="f8c5b84b-da6e-474c-9eca-f1621cb60b8b" processor="db:bulk-insert">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute attributeName="doc:name" whereValue="#['Insert players into db']" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[[{'ign':'warpy','igrole':'adc','team':'tsm'}]]" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
 		<munit:execution >
 			<flow-ref doc:name="Flow-ref to players_postPlayers_flow" doc:id="d4fff6b1-cedf-4bbc-b1f4-657aa839c975" name="players_postPlayers_flow"/>
 		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="7fee9097-603f-4399-b078-a27878c31d6b" expression="#[payload]" is="#[MunitTools::notNullValue()]"/>
+		</munit:validation>
 	</munit:test>
 
 
