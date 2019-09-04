@@ -12,22 +12,6 @@ http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/m
 	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="2237ee1a-950c-4a39-b5d6-cfaf99a30da9" >
 		<http:listener-connection host="0.0.0.0" port="8081" />
 	</http:listener-config>
-	<apikit:config outboundHeadersMapName="outboundHeadersMapName" httpStatusVarName="httpStatus" doc:name="Router" doc:id="85e3e82a-cc81-45d8-ae51-249a534fd9e5" name="Router" raml="/api/lcs-raml.raml">
-		<apikit:flow-mappings >
-			<apikit:flow-mapping resource="/teams/{tag}/players" action="get" flow-ref="players_getPlayersByRole_flow" />
-			<apikit:flow-mapping resource="/teams/{tag}/players" action="post" flow-ref="players_postPlayers_flow" />
-			<apikit:flow-mapping resource="/teams/{tag}/players/{ign}" action="put" flow-ref="players_putPlayer_flow" />
-			<apikit:flow-mapping resource="/teams/{tag}/players/{ign}" action="get" flow-ref="players_getPlayerByIgn_flow" />
-			<apikit:flow-mapping resource="/teams/{tag}/players/{ign}" action="delete" flow-ref="players_deletePlayer_flow" />
-			<apikit:flow-mapping resource="/teams" action="get" flow-ref="teams_getTeamsByRegion_flow" />
-			<apikit:flow-mapping resource="/teams" action="post" flow-ref="teams_postTeams_flow" />
-			<apikit:flow-mapping resource="/teams/{tag}" action="get" flow-ref="teams_getTeamByTag_flow" />
-			<apikit:flow-mapping resource="/teams/{tag}" action="put" flow-ref="teams_putTeam_flow" />
-			<apikit:flow-mapping resource="/teams/{tag}" action="delete" flow-ref="teams_deleteTeam_flow" />
-
-
-		</apikit:flow-mappings>
-	</apikit:config>
 	<configuration-properties doc:name="Configuration properties" doc:id="f6018762-269c-4328-9b78-18123a14ff49" file="${mule.env}.properties" />
 	
 	
@@ -40,6 +24,22 @@ http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/m
 	  password="${db.password}"
 	  database="lcstracker"/>
 	</db:config>
+	<apikit:config outboundHeadersMapName="outboundHeadersMapName" httpStatusVarName="httpStatus" doc:name="Router" doc:id="29bc8bba-85a5-4cdd-8126-741be815123f" name="Router" raml="api/lcstracker.raml">
+		<apikit:flow-mappings >
+			<apikit:flow-mapping resource="/teams/{tag}/players" action="get" flow-ref="players_getPlayersByRole_flow" />
+			<apikit:flow-mapping resource="/teams/{tag}/players" action="post" flow-ref="players_postPlayers_flow" />
+			<apikit:flow-mapping resource="/teams/{tag}/players/{ign}" action="patch" flow-ref="players_patchPlayer_flow" />
+			<apikit:flow-mapping resource="/teams/{tag}/players/{ign}" action="get" flow-ref="players_getPlayerByIgn_flow" />
+			<apikit:flow-mapping resource="/teams/{tag}/players/{ign}" action="delete" flow-ref="players_deletePlayer_flow" />
+			<apikit:flow-mapping resource="/teams" action="get" flow-ref="teams_getTeamsByRegion_flow" />
+			<apikit:flow-mapping resource="/teams" action="post" flow-ref="teams_postTeams_flow" />
+			<apikit:flow-mapping resource="/teams/{tag}" action="get" flow-ref="teams_getTeamByTag_flow" />
+			<apikit:flow-mapping resource="/teams/{tag}" action="patch" flow-ref="teams_patchTeams_flow" />
+			<apikit:flow-mapping resource="/teams/{tag}" action="delete" flow-ref="teams_deleteTeam_flow" />
+
+
+		</apikit:flow-mappings>
+	</apikit:config>
 
 	
 	

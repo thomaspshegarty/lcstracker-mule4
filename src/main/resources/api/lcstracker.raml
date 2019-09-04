@@ -55,7 +55,7 @@ securedBy: [basic]
             application/json:
               type: typeTeam
               example: !include examples/team.json
-    put:
+    patch:
       description: "update team info"
       body:
         application/json:
@@ -110,7 +110,7 @@ securedBy: [basic]
                 application/json:
                   type: typePlayer
                   example: !include examples/player.json
-        put:
+        patch:
           description: "update info of a specific player"
           body:
             application/json:
