@@ -85,7 +85,7 @@ output application/java
 }]]></ee:set-payload>
 				</ee:message>
 			</ee:transform>
-			<flow-ref doc:name="Flow-ref to players_putPlayer_flow" doc:id="0ba2f73e-935f-41cd-8a72-fb2bbbea56ef" name="players_putPlayer_flow"/>
+			<flow-ref doc:name="Flow-ref to players_putPlayer_flow" doc:id="0ba2f73e-935f-41cd-8a72-fb2bbbea56ef" name="players_patchPlayer_flow"/>
 		</munit:execution>
 		<munit:validation >
 			<logger level="INFO" doc:name="Logger" doc:id="6a008251-e38f-48be-ac85-c3b4141174a5" message="#[payload]"/>

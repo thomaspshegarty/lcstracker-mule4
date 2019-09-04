@@ -80,7 +80,7 @@ message.attributes.uriParams.'tag']]></ee:set-variable>
 			<db:input-parameters ><![CDATA[#['tag':vars.tag]]]></db:input-parameters>
 		</db:select>
 	</flow>
-	<flow name="teams_putTeam_flow" doc:id="9b1b3ecc-a87d-4708-8a62-85b872b48753" >
+	<flow name="teams_patchTeam_flow" doc:id="9b1b3ecc-a87d-4708-8a62-85b872b48753" >
 		<ee:transform doc:name="Convert payload to JSON" doc:id="b3677ba7-56c8-4e48-ab5b-72f1fc05bf56" >
 			<ee:message >
 			</ee:message>

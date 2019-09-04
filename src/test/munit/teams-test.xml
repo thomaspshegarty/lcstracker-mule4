@@ -85,7 +85,7 @@ output application/json
 }]]></ee:set-payload>
 				</ee:message>
 			</ee:transform>
-			<flow-ref doc:name="Flow-ref to teams_putTeam_subFlow" doc:id="7372f269-3363-4502-b6bc-0776d5671a5b" name="teams_putTeam_flow"/>
+			<flow-ref doc:name="Flow-ref to teams_putTeam_subFlow" doc:id="7372f269-3363-4502-b6bc-0776d5671a5b" name="teams_patchTeam_flow"/>
 		</munit:execution>
 		<munit:validation >
 			<munit-tools:assert-that doc:name="Assert that" doc:id="15aa8b1b-5983-4bb3-928d-daa7cf8de9cd" expression="#[payload]" is="#[MunitTools::notNullValue()]" />
