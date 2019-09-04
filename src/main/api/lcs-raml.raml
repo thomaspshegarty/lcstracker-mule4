@@ -1,5 +1,5 @@
 #%RAML 1.0
-title: LCS Tracker
+title: lcsTracker
 baseUri: https://basicurl.com/{version}
 version: v1
 
@@ -8,68 +8,15 @@ types:
   typePlayer: !include types/typePlayer.raml
   
 traits:
-  responseMessage: !include traits/responseMessage.raml
+  hasError: !include traits/responseMessage.raml
 
 securitySchemes:
   basic: !include security/basic.raml
 
 securedBy: [basic]
 
-/players:
-  description: "collection of all currently active professional players"
-  post:
-    description: "add new players to the database"
-    body:
-      application/json:
-        type: typePlayer[]
-        example: !include examples/playerArray.json
-    is: [ responseMessage ]
-  get:
-    description: "get a list of players on a specific team"
-    queryParameters:
-      teamTag: 
-        type: string
-        required: false
-        minLength: 2
-        maxLength: 3
-    responses:
-      200:
-        body:
-          application/json:
-            type: typePlayer[]
-            example: !include examples/playerArray.json
-        
-  /{playerId}:
-    uriParameters:
-      playerId:
-        type: integer
-    get:
-      description: "get a player by their id"
-      responses:
-        200:
-          body:
-            application/json:
-              type: typePlayer
-              example: !include examples/player.json
-        404:
-          body:
-            application/json:
-              example: |
-                {
-                  "message": "Player not found."
-                }
-    put:
-      description: "update info of a specific player"
-      body:
-        application/json:
-          type: typePlayer
-          example: !include examples/player.json
-      is: [ responseMessage ]
-    delete:
-      description: "removes the entry for given id"
-      is: [ responseMessage ]
-
 /teams:
+  is: [hasError]
   description: "collection of all active professional teams"
   post:
     description: "adds new teams to the active database"
@@ -77,45 +24,105 @@ securedBy: [basic]
       application/json:
         type: typeTeam[]
         example: !include examples/teamArray.json
-    is: [ responseMessage ]
+    responses:
+      201:
+        body:
+          application/json:
+            type: typeTeam[]
+            example: !include examples/teamArray.json
+
   get:
     description: "get list of teams from given region"
     queryParameters:
       region:
         type: string
         required: false
-        minLength: 2
-        maxLength: 3
     responses:
       200:
         body:
           application/json:
             type: typeTeam[]
             example: !include examples/teamArray.json
-  /{teamId}:
+  /{tag}:
     uriParameters:
-      teamId:
-        type: integer
+      tag:
+        type: string
     get:
-      description: "get the team info for the team id"
+      description: "get the team info for the team tag"
       responses:
         200:
           body:
             application/json:
               type: typeTeam
               example: !include examples/team.json
-        404:
-          body:
-            application/json:
-              example: |
-                {"message": "Team not found."}
     put:
       description: "update team info"
       body:
         application/json:
           type: typeTeam
           example: !include examples/team.json
-      is: [ responseMessage ]
+      responses:
+        200:
+          body:
+            application/json:
+              type: typeTeam
+              example: !include examples/team.json
     delete:
       description: "remove the team from the db"
-      is: [ responseMessage ]
+      responses: 
+        204:
+    /players:
+      description: "collection of all currently active professional players"
+      post:
+        description: "add new players to the database"
+        body:
+          application/json:
+            type: typePlayer[]
+            example: !include examples/playerArray.json
+        responses: 
+          201:
+            body:
+              application/json:
+                type: typePlayer[]
+                example: !include examples/playerArray.json
+      get:
+        description: "get a list players from /team with certain role"
+        queryParameters:
+          role: 
+            type: string
+            required: false
+            maxLength: 3
+        responses:
+          200:
+            body:
+              application/json:
+                type: typePlayer[]
+                example: !include examples/playerArray.json
+      /{ign}:
+        uriParameters:
+          ign:
+            type: string
+        get:
+          description: "get a player by their ign"
+          responses:
+            200:
+              body:
+                application/json:
+                  type: typePlayer
+                  example: !include examples/player.json
+        put:
+          description: "update info of a specific player"
+          body:
+            application/json:
+              type: typePlayer
+              example: !include examples/player.json
+          responses: 
+            200:
+              body:
+                application/json:
+                  type: typePlayer
+                  example: !include examples/player.json
+        delete:
+          description: "removes the entry for given id"
+          responses: 
+            204:
