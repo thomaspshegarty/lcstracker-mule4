@@ -9,6 +9,31 @@
 		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
 	<munit:config name="teams-test.xml" />
+	<munit:test name="teams-test-teams_getTeamByTag_subFlowTest" description="Test" doc:id="40af3276-ff7e-4d71-b636-fa652f5874a0">
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when" doc:id="7875146d-99a8-4f18-a9ee-9ea7f3f4f3d9" processor="db:select">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute attributeName="doc:name" whereValue="#['Select team by tag']" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return>
+					<munit-tools:payload value="#[readUrl('classpath://cosmonauts.dwl')]" mediaType="application/java" encoding="UTF-8" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<flow-ref doc:name="Flow-ref to teams_getTeamByTag_subFlow" doc:id="12b61d9a-02aa-43e7-95e8-5aeb3943bd52" name="teams_getTeamByTag_flow" />
+		</munit:execution>
+		<munit:validation>
+			<ee:transform doc:name="Transform Message" doc:id="9ceb96a1-febe-427d-acdf-721af73ddeff" >
+				<ee:message >
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="expected" resource="cosmonauts.dwl"/>
+				</ee:variables>
+			</ee:transform>
+			<munit-tools:assert-that doc:name="Assert that" doc:id="6b7ba554-83e0-49b0-936b-c8bc1e547604" expression="#[payload]" is="#[MunitTools::equalTo(vars.expected)]" />
+		</munit:validation>
+	</munit:test>
 	<munit:test name="teams-test-teams_getTeamsByRegion_subFlowTest" description="Test" doc:id="235a31b4-32b7-4cbe-8a1e-f7ce2e9464a4" >
 		<munit:behavior >
 			<munit-tools:mock-when doc:name="Mock when" doc:id="1bce02ef-36aa-448e-8da4-d08585fccf89" processor="db:select">
@@ -16,15 +41,17 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 					<munit-tools:with-attribute attributeName="doc:name" whereValue="#['Select all teams from region']" />
 				</munit-tools:with-attributes>
 				<munit-tools:then-return >
-					<munit-tools:payload value="#[[{'team':'cosmonauts','tag':'csm','region':'na','wins':10,'losses':0}]]" />
+					<munit-tools:payload value="#[readUrl('classpath://cosmonauts.dwl')]" mediaType='application/java' encoding="UTF-8"/>
 				</munit-tools:then-return>
 			</munit-tools:mock-when>
 		</munit:behavior>
 		<munit:execution >
 			<flow-ref doc:name="Flow-ref to teams_getTeamsByRegion_subFlow" doc:id="976d8e2f-673b-4319-b0f3-8e66dbdfe3e4" name="teams_getTeamsByRegion_flow"/>
 		</munit:execution>
-		<munit:validation >
-			<munit-tools:assert-that doc:name="Assert that" doc:id="f2b2ad1f-5152-48ac-9c3d-c521ccc087bb" expression="#[payload]" is="#[MunitTools::notNullValue()]"/>
+		<munit:validation>
+			<set-variable value="#[{'team':'cosmonauts','tag':'csm','region':'na','wins':10,'losses':0}]" doc:name="Set Variable" doc:id="86ea26ad-f228-4c96-b48b-4e4da0b844fd" variableName="expected"/>
+			<logger level="INFO" doc:name="Logger" doc:id="a648f2b8-863a-40e0-b8a5-c806e3a1a97f" message="The expected is #[vars.expected.toString] and the payload is #[payload.toString]" />
+			<munit-tools:assert-that doc:name="Assert that" doc:id="aeab6d5f-76a0-401b-b768-4b0e8f855dc9" expression="#[payload.toString()]" is="#[MunitTools::equalTo(vars.expected.toString())]"/>
 		</munit:validation>
 	</munit:test>
 	<munit:test name="teams-test-teams_postTeams_subFlowTest" description="Test" doc:id="5b2a9855-5fba-47de-9290-e96388f1a68b" >
@@ -34,7 +61,7 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 					<munit-tools:with-attribute attributeName="doc:name" whereValue="#['Insert players into db']" />
 				</munit-tools:with-attributes>
 				<munit-tools:then-return >
-					<munit-tools:payload value="#[[{'team':'cosmonauts','tag':'csm','region':'na','wins':10,'losses':0}]]" />
+					<munit-tools:payload value="#[readUrl('classpath://cosmonauts.dwl')]" mediaType="application/java" />
 				</munit-tools:then-return>
 			</munit-tools:mock-when>
 		</munit:behavior>
@@ -45,24 +72,6 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 			<munit-tools:assert-that doc:name="Assert that" doc:id="31125080-0197-438d-8065-942e714793cd" expression="#[payload]" is="#[MunitTools::notNullValue()]" />
 		</munit:validation>
 	</munit:test>
-	<munit:test name="teams-test-teams_getTeamByTag_subFlowTest" description="Test" doc:id="fb16452f-1ea6-4637-a7fc-98960917d02e" >
-		<munit:behavior >
-			<munit-tools:mock-when doc:name="Mock when" doc:id="e3780ef5-b22d-4100-a179-435256f0454e" processor="db:select">
-				<munit-tools:with-attributes >
-					<munit-tools:with-attribute attributeName="doc:name" whereValue="#['Select team by tag']" />
-				</munit-tools:with-attributes>
-				<munit-tools:then-return >
-					<munit-tools:payload value="#[[{'team':'cosmonauts','tag':'csm','region':'na','wins':10,'losses':0}]]" />
-				</munit-tools:then-return>
-			</munit-tools:mock-when>
-		</munit:behavior>
-		<munit:execution >
-			<flow-ref doc:name="Flow-ref to teams_getTeamByTag_subFlow" doc:id="6d71b55e-6919-41e3-8289-06e43ca99a73" name="teams_getTeamByTag_flow"/>
-		</munit:execution>
-		<munit:validation >
-			<munit-tools:assert-that doc:name="Assert that" doc:id="199b5144-d551-48eb-a58b-6912b7bfd48d" expression="#[payload]" is="#[MunitTools::notNullValue()]" />
-		</munit:validation>
-	</munit:test>
 	<munit:test name="teams-test-teams_putTeam_subFlowTest" description="Test" doc:id="e3965dbb-55c8-459f-9079-3733fc485dd9" >
 		<munit:behavior >
 			<munit-tools:mock-when doc:name="Mock when" doc:id="ce7e8b66-6083-4638-9769-95ad5e867e01" processor="db:update">
@@ -70,7 +79,7 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 					<munit-tools:with-attribute attributeName="doc:name" whereValue="#['Update the team of given tag']" />
 				</munit-tools:with-attributes>
 				<munit-tools:then-return >
-					<munit-tools:payload value="#[[{'team':'cosmonauts','tag':'csm','region':'na','wins':10,'losses':0}]]" />
+					<munit-tools:payload value="#[readUrl('classpath://cosmonauts.dwl')]" mediaType="application/java" />
 				</munit-tools:then-return>
 			</munit-tools:mock-when>
 		</munit:behavior>
@@ -91,18 +100,18 @@ output application/json
 			<munit-tools:assert-that doc:name="Assert that" doc:id="15aa8b1b-5983-4bb3-928d-daa7cf8de9cd" expression="#[payload]" is="#[MunitTools::notNullValue()]" />
 		</munit:validation>
 	</munit:test>
-	<munit:test name="teams-test-teams_deleteTeam_subFlowTest" description="Test" doc:id="9cb7eb72-aa3a-48e6-9229-2dc911c0d78f" >
-		<munit:behavior >
+	<munit:test name="teams-test-teams_deleteTeam_subFlowTest" description="Test" doc:id="9cb7eb72-aa3a-48e6-9229-2dc911c0d78f">
+		<munit:behavior>
 			<munit-tools:mock-when doc:name="Mock when" doc:id="236816df-084e-4388-b3f5-dc8e52e48579" processor="db:delete">
-				<munit-tools:with-attributes >
+				<munit-tools:with-attributes>
 					<munit-tools:with-attribute attributeName="doc:name" whereValue="#['Delete the team of given tag']" />
 				</munit-tools:with-attributes>
 			</munit-tools:mock-when>
 		</munit:behavior>
-		<munit:execution >
-			<flow-ref doc:name="Flow-ref to teams_deleteTeam_subFlow" doc:id="03b4d15d-9aa5-4b9d-84cb-2ae5b9fcd50d" name="teams_deleteTeam_flow"/>
+		<munit:execution>
+			<flow-ref doc:name="Flow-ref to teams_deleteTeam_subFlow" doc:id="03b4d15d-9aa5-4b9d-84cb-2ae5b9fcd50d" name="teams_deleteTeam_flow" />
 		</munit:execution>
-		<munit:validation >
+		<munit:validation>
 			<munit-tools:assert-that doc:name="Assert that" doc:id="9e65a76b-55db-4fa1-b870-27cbea66b1e4" expression="#[payload]" is="#[MunitTools::notNullValue()]" />
 		</munit:validation>
 	</munit:test>

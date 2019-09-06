@@ -10,10 +10,7 @@ http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/cu
 			<ee:message >
 			</ee:message>
 			<ee:variables >
-				<ee:set-variable variableName="region" ><![CDATA[%dw 2.0
-output application/java
----
-message.attributes.queryParams.'region']]></ee:set-variable>
+				<ee:set-variable variableName="region" resource="region.dwl"/>
 			</ee:variables>
 		</ee:transform>
 		<logger level="INFO" doc:name="Log the region" doc:id="7a3b374c-f376-4d0d-a7f3-371eb4582dea" message="[#[vars.callTrace]] Retrieiving all teams from region [#[vars.region]]"/>
@@ -32,10 +29,7 @@ message.attributes.queryParams.'region']]></ee:set-variable>
 		</choice>
 		<ee:transform doc:name="Transform to readable json" doc:id="7e86efd0-edd5-4669-ba01-2be39f49feaa">
 			<ee:message>
-				<ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-payload]]></ee:set-payload>
+				<ee:set-payload resource="toreturn.dwl"/>
 			</ee:message>
 		</ee:transform>
 	</flow>
@@ -44,10 +38,7 @@ payload]]></ee:set-payload>
 			<ee:message >
 			</ee:message>
 			<ee:variables >
-				<ee:set-variable variableName="to_return" ><![CDATA[%dw 2.0
-output application/json
----
-payload]]></ee:set-variable>
+				<ee:set-variable variableName="to_return" resource="toreturn.dwl"/>
 			</ee:variables>
 		</ee:transform>
 		<db:bulk-insert doc:name="Insert players into db" doc:id="ac1889bd-b80e-4b3c-9004-b697e4bb08d8" config-ref="dbConfig">
@@ -56,10 +47,7 @@ payload]]></ee:set-variable>
 		<logger level="INFO" doc:name="Log that we've posted the teams" doc:id="9e523e42-d98b-4615-89a5-e42d1251b273" message="[#[vars.callTrace]] Payload has been posted."/>
 		<ee:transform doc:name="Convert payload to readable JSON" doc:id="3187dfb1-63d7-48ca-98eb-2e554caa67f1" >
 			<ee:message >
-				<ee:set-payload ><![CDATA[%dw 2.0
-output application/json
----
-vars.to_return]]></ee:set-payload>
+				<ee:set-payload resource="setreturn.dwl"/>
 			</ee:message>
 		</ee:transform>
 	</flow>
@@ -68,10 +56,7 @@ vars.to_return]]></ee:set-payload>
 			<ee:message >
 			</ee:message>
 			<ee:variables >
-				<ee:set-variable variableName="tag" ><![CDATA[%dw 2.0
-output application/java
----
-message.attributes.uriParams.'tag']]></ee:set-variable>
+				<ee:set-variable variableName="tag" resource="tag.dwl"/>
 			</ee:variables>
 		</ee:transform>
 		<logger level="INFO" doc:name="Log the tag" doc:id="552461e6-b3d6-42cf-9497-e00f99e15759" message="[#[vars.callTrace]] Getting team of following tag [#[vars.tag]]"/>
@@ -85,10 +70,7 @@ message.attributes.uriParams.'tag']]></ee:set-variable>
 			<ee:message >
 			</ee:message>
 			<ee:variables >
-				<ee:set-variable variableName="to_return" ><![CDATA[%dw 2.0
-output application/json
----
-payload]]></ee:set-variable>
+				<ee:set-variable variableName="to_return" resource="toreturn.dwl"/>
 			</ee:variables>
 		</ee:transform>
 		<logger level="INFO" doc:name="Log the tag of team to update" doc:id="b5e6d9a5-2a6d-44c5-bcf5-89e4ced524ad" message="[#[vars.callTrace]] Updating team with tag [#[payload.tag]]"/>
@@ -98,10 +80,7 @@ payload]]></ee:set-variable>
 		</db:update>
 		<ee:transform doc:name="Set payload from return variable" doc:id="c7ad5ae1-4494-4ce4-9e6a-109f035e626c" >
 			<ee:message >
-				<ee:set-payload ><![CDATA[%dw 2.0
-output application/json
----
-vars.to_return]]></ee:set-payload>
+				<ee:set-payload resource="setreturn.dwl"/>
 			</ee:message>
 		</ee:transform>
 	</flow>
@@ -110,10 +89,7 @@ vars.to_return]]></ee:set-payload>
 			<ee:message >
 			</ee:message>
 			<ee:variables >
-				<ee:set-variable variableName="tag" ><![CDATA[%dw 2.0
-output application/java
----
-message.attributes.uriParams.'tag']]></ee:set-variable>
+				<ee:set-variable variableName="tag" resource="tag.dwl"/>
 			</ee:variables>
 		</ee:transform>
 		<logger level="INFO" doc:name="Log the tag of the team to update" doc:id="b8a33a02-f92c-4729-9e6c-9f87a643aa71" message="[#[vars.callTrace]] Deleting team of tag [#[vars.tag]]"/>

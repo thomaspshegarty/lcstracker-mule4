@@ -10,14 +10,8 @@ http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/cu
 			<ee:message >
 			</ee:message>
 			<ee:variables >
-				<ee:set-variable variableName="role" ><![CDATA[%dw 2.0
-output application/java
----
-message.attributes.queryParams.'role']]></ee:set-variable>
-				<ee:set-variable variableName="tag" ><![CDATA[%dw 2.0
-output application/java
----
-message.attributes.uriParams.'tag']]></ee:set-variable>
+				<ee:set-variable variableName="role" resource="role.dwl"/>
+				<ee:set-variable variableName="tag" resource="tag.dwl"/>
 			</ee:variables>
 		</ee:transform>
 		<logger level="INFO" doc:name="Log the tag and role" doc:id="46406831-9d18-47c0-89f6-2844122af371" message="[#[vars.callTrace]] Retrieving players with team [#[vars.tag]] and [#[vars.role]]." category="com.ms3.lcstracker-mule4.players" />
@@ -48,10 +42,7 @@ payload]]></ee:set-payload>
 			<ee:message >
 			</ee:message>
 			<ee:variables >
-				<ee:set-variable variableName="to_return" ><![CDATA[%dw 2.0
-output application/json
----
-payload]]></ee:set-variable>
+				<ee:set-variable variableName="to_return" resource="toreturn.dwl"/>
 			</ee:variables>
 		</ee:transform>
 		<db:bulk-insert doc:name="Insert players into db" doc:id="c6b3d0a3-dea7-4b5c-94ae-ed14e7bc5665" config-ref="dbConfig">
@@ -60,10 +51,7 @@ payload]]></ee:set-variable>
 		<logger level="INFO" doc:name="Log that we've posted the players" doc:id="f43a5af9-ef90-4e72-8799-6300f19d6b68" message="[#[vars.callTrace]] Posted the inserted JSON"/>
 		<ee:transform doc:name="Transform payload to JSON readable format" doc:id="46a9b6ec-42a6-4b89-a2e5-604bc5e67970" >
 			<ee:message >
-				<ee:set-payload ><![CDATA[%dw 2.0
-output application/json
----
-vars.to_return]]></ee:set-payload>
+				<ee:set-payload resource="setreturn.dwl"/>
 			</ee:message>
 		</ee:transform>
 	</flow>
@@ -72,14 +60,8 @@ vars.to_return]]></ee:set-payload>
 			<ee:message >
 			</ee:message>
 			<ee:variables >
-				<ee:set-variable variableName="ign" ><![CDATA[%dw 2.0
-output application/java
----
-message.attributes.uriParams.'ign']]></ee:set-variable>
-				<ee:set-variable variableName="tag" ><![CDATA[%dw 2.0
-output application/java
----
-message.attributes.uriParams.'tag']]></ee:set-variable>
+				<ee:set-variable variableName="ign" resource="ign.dwl"/>
+				<ee:set-variable variableName="tag" resource="tag.dwl"/>
 			</ee:variables>
 		</ee:transform>
 		<logger level="TRACE" doc:name="Log the ign and tag of player we're retrieving" doc:id="b2d86043-d539-433a-9e37-5420c4bd0abe" message="[#[vars.callTrace]] Retrieving player [#[vars.ign]] from team [#[vars.tag]]" category="com.ms3.lcstracker-mule4.players" />
@@ -96,10 +78,7 @@ message.attributes.uriParams.'tag']]></ee:set-variable>
 			<ee:message >
 			</ee:message>
 			<ee:variables >
-				<ee:set-variable variableName="to_return" ><![CDATA[%dw 2.0
-output application/json
----
-payload]]></ee:set-variable>
+				<ee:set-variable variableName="to_return" resource="toreturn.dwl"/>
 			</ee:variables>
 		</ee:transform>
 		<logger level="INFO" doc:name="Log the ign of player to update" doc:id="7cb03a16-3bd3-4a78-a51d-bae0ab8e1270" message="[#[vars.callTrace]] Updating player of ign [#[payload.ign]]"/>
@@ -113,10 +92,7 @@ payload]]></ee:set-variable>
 		</db:update>
 		<ee:transform doc:name="Set payload of updated info" doc:id="c311416a-ebda-4298-8fab-0372923f6930" >
 			<ee:message >
-				<ee:set-payload ><![CDATA[%dw 2.0
-output application/json
----
-vars.to_return]]></ee:set-payload>
+				<ee:set-payload resource="setreturn.dwl"/>
 			</ee:message>
 		</ee:transform>
 	</flow>
@@ -125,10 +101,7 @@ vars.to_return]]></ee:set-payload>
 			<ee:message >
 			</ee:message>
 			<ee:variables >
-				<ee:set-variable variableName="ign" ><![CDATA[%dw 2.0
-output application/java
----
-message.attributes.queryParams.'ign']]></ee:set-variable>
+				<ee:set-variable variableName="ign" resource="ign.dwl"/>
 			</ee:variables>
 		</ee:transform>
 		<logger level="INFO" doc:name="Log the ign of the player to delete" doc:id="7781e8af-8272-4f17-82d9-cd55693c93ce" message="[#[vars.callTrace]] Deleting player [#[vars.ign]]"/>
