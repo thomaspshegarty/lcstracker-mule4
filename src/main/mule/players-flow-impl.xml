@@ -72,6 +72,14 @@ payload]]></ee:set-payload>
 'ign':vars.ign
 }]]]></db:input-parameters>
 		</db:select>
+		<ee:transform doc:name="Transform payload to readable JSON" doc:id="fcd9f1ed-ec52-4518-afa9-3852deeb3435" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
 	</flow>
 	<flow name="players_patchPlayer_flow" doc:id="1be26445-5c88-4c96-9eda-b5a04bc7a07c" >
 		<ee:transform doc:name="Make sure input is a json" doc:id="93c4a5f7-c0e1-42b0-870a-8ef067c3b2db" >

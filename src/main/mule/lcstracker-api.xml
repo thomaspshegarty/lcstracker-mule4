@@ -101,19 +101,31 @@ output application/json
                     </ee:variables>
                 </ee:transform>
             </on-error-propagate>
-			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="b1da61df-94db-49f9-ac46-d77f0f85286d" type="DB:QUERY_EXECUTION, DB:BAD_SQL_SYNTAX">
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="b1da61df-94db-49f9-ac46-d77f0f85286d" type="DB:BAD_SQL_SYNTAX">
 				<ee:transform doc:name="Transform Message" doc:id="e5b6ffdf-eb73-4cf4-a9a8-a94e2da2e34a" >
 					<ee:message >
 						<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
 ---
-{'message':'Database Error'}]]></ee:set-payload>
+{'message':'Malformed SQL syntax -- perhaps your request contained unwanted characters?'}]]></ee:set-payload>
 					</ee:message>
 					<ee:variables >
 						<ee:set-variable variableName="httpStatus" ><![CDATA[469]]></ee:set-variable>
 					</ee:variables>
 				</ee:transform>
 			</on-error-propagate>
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="81d63273-de96-4905-ad94-f74f010b9786" type="DB:QUERY_EXECUTION">
+				<ee:transform doc:name="Transform Message" doc:id="0076a3a7-9607-44e3-b1e2-63175bc8f91d" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	'message':'The SQL query did not properly/fully execute: possibly a version of a POSTed player already exists in the db'
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</on-error-continue>
         </error-handler>
     </flow>
     <flow name="lcsTracker-console">
